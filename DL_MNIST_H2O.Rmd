@@ -1,0 +1,110 @@
+---
+title: "DeepLearning MNIST en H2O"
+output: github_document
+---
+
+Usando el framework de `H2O` para reconocimiento de dígitos (MNIST). 
+
+## Iniciar cluster de h2o:  
+
+```{r message = F}
+library(h2o)
+h2o.init()
+#h2o.shutdown()
+```
+
+## Importar datos
+
+```{r message=F}
+train_file <- "https://h2o-public-test-data.s3.amazonaws.com/bigdata/laptop/mnist/train.csv.gz"
+test_file <- "https://h2o-public-test-data.s3.amazonaws.com/bigdata/laptop/mnist/test.csv.gz"
+
+train <- h2o.importFile(train_file)
+test <- h2o.importFile(test_file)
+```
+
+
+## Explorar datos
+
+```{r}
+train_1 <- as.data.frame(train)
+```
+
+La función `dim(train_1)` muestra que el conjunto de entrenamiento tiene 60.000 observaciones con 785 columnas, de los cuales 784 corresponden a los pixeles (28 por alto x 28 por ancho), mientras la columna 785 indica el dígito correspondiente
+
+```{r}
+dim(train_1) # 60000 obs , 785 columnas 
+str(train_1$C1)
+(as.numeric(train_1[1,])) # primera observacion
+head(train_1$C785)
+```
+
+### Imprimir dígitos  
+
+Se aplicó la función `t()` con la opción `rev` para girar el conjunto de datos para facilitar la visualización. La función `img()` plotea los dígitos
+
+```{r}
+im <- matrix(as.numeric(train_1[4,1:784]), byrow=T, ncol = 28)
+im <- t(apply(im,2,rev)) # se gira los datos para vizualizarlos 
+image(1:28, 1:28, im, col=gray((255:0)/255))
+
+im <- matrix(as.numeric(train_1[9,1:784]), byrow=T, ncol = 28)
+im <- t(apply(im,2,rev))
+image(1:28, 1:28, im, col=gray((255:0)/255))
+```
+
+## Preparando la configuración del modelo  
+
+### Especificar el nombre de las variables de entrada y salida
+
+```{r}
+y <- "C785"
+x <- setdiff(names(train), y)
+```
+
+Como el problema es de clasificación, las variables de respuesta se transforman a factor
+
+```{r}
+train[,y] <- as.factor(train[,y])
+test[,y] <- as.factor(test[,y])
+```
+
+### Entrenamiento
+
+```{r message= F}
+model <- h2o.deeplearning(
+    x = x,
+    y = y,
+    training_frame = train,
+    validation_frame = test,
+    distribution = "multinomial",
+    activation = "RectifierWithDropout",
+    hidden = c(32,32,32),
+    input_dropout_ratio = 0.2,
+    sparse = TRUE, #buscar q es sparse!!!!
+    l1 = 1e-5,
+    epochs = 10)
+```
+
+
+El modelo solo se corrio por 10 épocas a modo de ejemplo.
+
+### Salidas
+
+```{r}
+# View specified parameters of the deep learning model
+print(model@parameters)
+# Examine the performance of the trained model
+print(model)
+# display all performance metrics
+print(h2o.performance(model))
+# training metrics
+print(h2o.performance(model, valid = TRUE))
+# validation metrics 
+# Get MSE only
+print(h2o.mse(model, valid = TRUE))
+# Cross-validated MSE
+
+#h2o.mse(model_cv, xval = TRUE) #FALTA
+```
+
