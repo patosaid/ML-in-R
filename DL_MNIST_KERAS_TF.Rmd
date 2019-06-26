@@ -1,0 +1,33 @@
+---
+title: "DeepLearning MNIST con KERAS"
+output: html_document
+---
+
+Fuente: https://tensorflow.rstudio.com/keras/
+
+__no se puede instalar o correr keras__
+
+## Instalación  
+
+```{r}
+devtools::install_github("rstudio/tensorflow")
+devtools::install_github("rstudio/keras")
+```
+
+```{r}
+tensorflow::install_tensorflow()
+tensorflow::tf_config()
+```
+
+The Keras R interface uses the TensorFlow backend engine by default. To install both the core Keras library as well as the TensorFlow backend use the `install_keras()` function:
+
+```{r}
+library(keras)
+install_keras() # tener anaconda Python 3.x
+```
+
+This will provide you with default CPU-based installations of Keras and TensorFlow. If you want a more customized installation, e.g. if you want to take advantage of NVIDIA GPUs, see the documentation for `install_keras()`.  
+```{r}
+devtools::session_info()
+```
+
