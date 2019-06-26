@@ -3,6 +3,8 @@ title: "DeepLearning MNIST en H2O"
 output: github_document
 ---
 
+__Fuente: http://docs.h2o.ai/h2o/latest-stable/h2o-docs/booklets/DeepLearningBooklet.pdf__  
+
 Usando el framework de `H2O` para reconocimiento de dígitos (MNIST). 
 
 ## Iniciar cluster de h2o:  
@@ -69,7 +71,7 @@ train[,y] <- as.factor(train[,y])
 test[,y] <- as.factor(test[,y])
 ```
 
-### Entrenamiento
+### Entrenamiento (básico)
 
 ```{r message= F}
 model <- h2o.deeplearning(
@@ -87,6 +89,7 @@ model <- h2o.deeplearning(
 ```
 
 
+
 El modelo solo se corrio por 10 épocas a modo de ejemplo.
 
 ### Salidas
@@ -94,17 +97,70 @@ El modelo solo se corrio por 10 épocas a modo de ejemplo.
 ```{r}
 # View specified parameters of the deep learning model
 print(model@parameters)
+
 # Examine the performance of the trained model
-print(model)
-# display all performance metrics
-print(h2o.performance(model))
-# training metrics
-print(h2o.performance(model, valid = TRUE))
-# validation metrics 
+print(model)# display all performance metrics
+
+print(h2o.performance(model))# training metrics
+print(h2o.performance(model, valid = TRUE))# validation metrics 
+
 # Get MSE only
 print(h2o.mse(model, valid = TRUE))
-# Cross-validated MSE
 
+#Cross-validated MSE
 #h2o.mse(model_cv, xval = TRUE) #FALTA
 ```
+
+## Validación cruzada
+
+O N-fold Cross-Validation. Para guardar predicciones de la VC fijar el parámetro `keepcrossvalidationpredictions` como `TRUE`. También se puede especificar las filas por medio de `foldcolumn`. Por defecto, `foldcolumn` es aleatorio. 
+
+```{r}
+#Perform 5-fold cross-validation on training_frame
+model_cv <- h2o.deeplearning(
+    x = x,
+    y = y,
+    training_frame = train,
+    distribution = "multinomial",
+    activation = "RectifierWithDropout",
+    hidden = c(32,32,32),
+    input_dropout_ratio = 0.2,
+    sparse = TRUE,
+    l1 = 1e-5,
+    epochs = 10,
+    nfolds = 5)
+```
+
+### Métricas del CV
+
+```{r}
+#Cross-validated MSE
+h2o.mse(model_cv, xval = TRUE)
+```
+
+El valor del error de entrenamiento está basado en el parámetro `score_training_samples`, el cual especifica el numero aleatorio de puntos de ejemplos de entrenamiento usado para el *scoring* (el valor por defecto es 10.000 puntos). El error de validacion esta basado sobre el parámetro `score_validation_samples`, el cual configura el mismo valor sobre el conjunto de validación (por defecto, este es el conjunto de validación por completo).  
+
+> [Scoring](https://s3.amazonaws.com/h2o-release/h2o/rel-markov/1/docs-website/datascience/deeplearning.html): If a validation set was given, the scoring results are displayed for the validation set (or a sample thereof). Otherwise, scoring is performed on the training dataset (or a sample thereof).
+
+    If a validation set was given, the scoring results are displayed for the validation set (or a sample thereof). Otherwise, scoring is performed on the training dataset (or a sample thereof).
+En general, eligiendo un número grande de puntos de ejemplos lleva a un mejor entendimiento del rendimiento del modelo sobre el tu conjunto de datos; fijando cualquiera de estos parámetros en 0 automáticamente usas el conjunto entero para el *scoring*.  
+Sin embargo, cualquiera de los metodos de permite controlar el minimo o maximo de tiempo gastado sobre el *scoring* con los parámetros `score_interval` y `score_duty_cycle`.  
+Si el parámetro `overwrite_with_best_model` está activado, estos parámetros *scoring* afectan al modelo final. Esta opción selecciona el modelo con más bajo error de validación durante el entrenamiento (basado  sobre los puntos de ejemplos usados para *scoring*) como el modelo final después de entrenamiento.  Si un conjunto de datos no está identificado como conjunto de validación, el conjunto de entrenamiento es usado por defecto, en este caso, ambos `score_training_samples` o `score_validation_samples` controlarán el calculo del error durante el entrenamiento y consecuentemente, el modelo seleccionado como el mejor.
+
+## Estimaciones 
+
+Una vez tengamos un modelo satisfactorio (determinado por validación o métricas de CV), se usa el comando `h2o.predict()` para calcular y almacenar las predicciones sobre un conjunto nuevo de datos. 
+
+```{r}
+#lassify the test set (predict class labels)
+# This also returns the probability for each class
+pred <- h2o.predict(model, newdata = test)
+# Take a look at the predictions
+head(pred)
+```
+
+
+## Variables de importancia
+
+
 

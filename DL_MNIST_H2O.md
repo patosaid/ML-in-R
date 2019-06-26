@@ -1,6 +1,9 @@
 DeepLearning MNIST en H2O
 ================
 
+\_\_Fuente:
+<http://docs.h2o.ai/h2o/latest-stable/h2o-docs/booklets/DeepLearningBooklet.pdf__>
+
 Usando el framework de `H2O` para reconocimiento de dígitos (MNIST).
 
 ## Iniciar cluster de h2o:
@@ -13,14 +16,14 @@ h2o.init()
     ##  Connection successful!
     ## 
     ## R is connected to the H2O cluster: 
-    ##     H2O cluster uptime:         18 minutes 26 seconds 
+    ##     H2O cluster uptime:         38 minutes 326 milliseconds 
     ##     H2O cluster timezone:       America/Santiago 
     ##     H2O data parsing timezone:  UTC 
     ##     H2O cluster version:        3.22.1.1 
-    ##     H2O cluster version age:    5 months and 26 days !!! 
-    ##     H2O cluster name:           H2O_started_from_R_psaid_few506 
+    ##     H2O cluster version age:    5 months and 28 days !!! 
+    ##     H2O cluster name:           H2O_started_from_R_psaid_hpw848 
     ##     H2O cluster total nodes:    1 
-    ##     H2O cluster total memory:   1.37 GB 
+    ##     H2O cluster total memory:   1.38 GB 
     ##     H2O cluster total cores:    8 
     ##     H2O cluster allowed cores:  8 
     ##     H2O cluster healthy:        TRUE 
@@ -32,7 +35,7 @@ h2o.init()
     ##     R Version:                  R version 3.6.0 (2019-04-26)
 
     ## Warning in h2o.clusterInfo(): 
-    ## Your H2O cluster version is too old (5 months and 26 days)!
+    ## Your H2O cluster version is too old (5 months and 28 days)!
     ## Please download and install the latest version from http://h2o.ai/download/
 
 ``` r
@@ -123,8 +126,6 @@ test <- h2o.importFile(test_file)
     ## 
       |                                                                       
       |                                                                 |   0%
-      |                                                                       
-      |==                                                               |   3%
       |                                                                       
       |====                                                             |   6%
       |                                                                       
@@ -308,7 +309,7 @@ train[,y] <- as.factor(train[,y])
 test[,y] <- as.factor(test[,y])
 ```
 
-### Entrenamiento
+### Entrenamiento (básico)
 
 ``` r
 model <- h2o.deeplearning(
@@ -335,7 +336,9 @@ model <- h2o.deeplearning(
       |                                                                       
       |====================                                             |  30%
       |                                                                       
-      |=======================================                          |  60%
+      |==========================                                       |  40%
+      |                                                                       
+      |================================                                 |  50%
       |                                                                       
       |==============================================                   |  70%
       |                                                                       
@@ -353,13 +356,13 @@ print(model@parameters)
 ```
 
     ## $model_id
-    ## [1] "DeepLearning_model_R_1561395268079_2"
+    ## [1] "DeepLearning_model_R_1561556697365_3"
     ## 
     ## $training_frame
-    ## [1] "RTMP_sid_95a2_3"
+    ## [1] "RTMP_sid_acdf_3"
     ## 
     ## $validation_frame
-    ## [1] "RTMP_sid_95a2_4"
+    ## [1] "RTMP_sid_acdf_4"
     ## 
     ## $activation
     ## [1] "RectifierWithDropout"
@@ -368,7 +371,7 @@ print(model@parameters)
     ## [1] 32 32 32
     ## 
     ## $seed
-    ## [1] 3.03485e+18
+    ## [1] -2.279216e+18
     ## 
     ## $input_dropout_ratio
     ## [1] 0.2
@@ -461,69 +464,69 @@ print(model@parameters)
 
 ``` r
 # Examine the performance of the trained model
-print(model)
+print(model)# display all performance metrics
 ```
 
     ## Model Details:
     ## ==============
     ## 
     ## H2OMultinomialModel: deeplearning
-    ## Model ID:  DeepLearning_model_R_1561395268079_2 
+    ## Model ID:  DeepLearning_model_R_1561556697365_3 
     ## Status of Neuron Layers: predicting C785, 10-class classification, multinomial distribution, CrossEntropy loss, 25.418 weights/biases, 529,7 KB, 600.000 training samples, mini-batch size 1
     ##   layer units             type dropout       l1       l2 mean_rate
     ## 1     1   717            Input 20.00 %       NA       NA        NA
-    ## 2     2    32 RectifierDropout 50.00 % 0.000010 0.000000  0.031171
-    ## 3     3    32 RectifierDropout 50.00 % 0.000010 0.000000  0.000330
-    ## 4     4    32 RectifierDropout 50.00 % 0.000010 0.000000  0.000577
-    ## 5     5    10          Softmax      NA 0.000010 0.000000  0.002631
+    ## 2     2    32 RectifierDropout 50.00 % 0.000010 0.000000  0.029910
+    ## 3     3    32 RectifierDropout 50.00 % 0.000010 0.000000  0.000359
+    ## 4     4    32 RectifierDropout 50.00 % 0.000010 0.000000  0.000557
+    ## 5     5    10          Softmax      NA 0.000010 0.000000  0.002597
     ##   rate_rms momentum mean_weight weight_rms mean_bias bias_rms
     ## 1       NA       NA          NA         NA        NA       NA
-    ## 2 0.178276 0.000000   -0.009097   0.065914  0.454893 0.237715
-    ## 3 0.000192 0.000000   -0.030684   0.201439  0.721484 0.345788
-    ## 4 0.000255 0.000000   -0.049099   0.210195  0.727317 0.360738
-    ## 5 0.002140 0.000000   -0.569977   1.023873 -2.316403 1.031315
+    ## 2 0.173522 0.000000   -0.009520   0.066708  0.465037 0.277793
+    ## 3 0.000206 0.000000   -0.025123   0.201079  0.775836 0.271249
+    ## 4 0.000277 0.000000   -0.046820   0.210071  0.760028 0.384977
+    ## 5 0.002564 0.000000   -0.457772   1.008595 -2.035386 0.961091
     ## 
     ## 
     ## H2OMultinomialMetrics: deeplearning
     ## ** Reported on training data. **
-    ## ** Metrics reported on temporary training frame with 9872 samples **
+    ## ** Metrics reported on temporary training frame with 9945 samples **
     ## 
     ## Training Set Metrics: 
     ## =====================
     ## 
-    ## MSE: (Extract with `h2o.mse`) 0.1195367
-    ## RMSE: (Extract with `h2o.rmse`) 0.3457408
-    ## Logloss: (Extract with `h2o.logloss`) 0.3997046
-    ## Mean Per-Class Error: 0.09123177
+    ## MSE: (Extract with `h2o.mse`) 0.09234385
+    ## RMSE: (Extract with `h2o.rmse`) 0.3038813
+    ## Logloss: (Extract with `h2o.logloss`) 0.3205148
+    ## Mean Per-Class Error: 0.08835063
     ## Confusion Matrix: Extract with `h2o.confusionMatrix(<model>,train = TRUE)`)
     ## =========================================================================
     ## Confusion Matrix: Row labels: Actual class; Column labels: Predicted class
-    ##           0    1   2    3   4   5    6    7   8    9  Error          Rate
-    ## 0       934    0   0    2   0   3   10    3   1    1 0.0210 =    20 / 954
-    ## 1         0 1035   9    2   1   6    0    8  11    1 0.0354 =  38 / 1.073
-    ## 2         9    2 926   22   2   3   26   11  10    2 0.0859 =  87 / 1.013
-    ## 3         5    2  13  948   0  23    4   10   9    5 0.0697 =  71 / 1.019
-    ## 4         2    2   0    2 728   4   46   14  11  154 0.2440 =   235 / 963
-    ## 5        16    1   8   33   1 803    9    4  29   11 0.1224 =   112 / 915
-    ## 6        16    2  12    0   2   8  951    2  11    0 0.0528 =  53 / 1.004
-    ## 7         3    3   7    6   0   2    1  969   1   15 0.0377 =  38 / 1.007
-    ## 8        20   13   8    8   1  44    3    7 862    6 0.1132 =   110 / 972
-    ## 9         8    2   0   10  10  14    2   73   5  828 0.1303 =   124 / 952
-    ## Totals 1013 1062 983 1033 745 910 1052 1101 950 1023 0.0900 = 888 / 9.872
+    ##          0    1   2   3   4   5    6    7    8    9  Error          Rate
+    ## 0      955    0   2   1   2   7   15    0   13    0 0.0402 =    40 / 995
+    ## 1        0 1031   3   1   0   2    2    4   17    2 0.0292 =  31 / 1.062
+    ## 2        2    1 904  17   6   1   10    8   26    1 0.0738 =    72 / 976
+    ## 3        3    1  29 832   0  60    2   15   51    6 0.1672 =   167 / 999
+    ## 4        1    2   7   0 873   3   16    1   12   54 0.0991 =    96 / 969
+    ## 5        9    0   9  11   7 703   16    1  148    5 0.2266 =   206 / 909
+    ## 6        6    3   5   0   3   8  975    0   10    0 0.0347 =  35 / 1.010
+    ## 7        2    2  14   2  12   0    3  984    4   23 0.0593 =  62 / 1.046
+    ## 8        1    7   9   4   0  12    8    2  905    4 0.0494 =    47 / 952
+    ## 9        3    3   1   2  28   3    0   33   34  920 0.1042 = 107 / 1.027
+    ## Totals 982 1050 983 870 931 799 1047 1048 1220 1015 0.0868 = 863 / 9.945
     ## 
     ## Hit Ratio Table: Extract with `h2o.hit_ratio_table(<model>,train = TRUE)`
     ## =======================================================================
     ## Top-10 Hit Ratios: 
     ##     k hit_ratio
-    ## 1   1  0.910049
-    ## 2   2  0.956442
-    ## 3   3  0.974777
-    ## 4   4  0.984400
-    ## 5   5  0.988250
-    ## 6   6  0.993112
-    ## 7   7  0.995746
-    ## 8   8  0.997670
-    ## 9   9  0.999696
+    ## 1   1  0.913223
+    ## 2   2  0.967220
+    ## 3   3  0.982504
+    ## 4   4  0.989442
+    ## 5   5  0.993464
+    ## 6   6  0.995877
+    ## 7   7  0.997788
+    ## 8   8  0.999497
+    ## 9   9  0.999799
     ## 10 10  1.000000
     ## 
     ## 
@@ -534,92 +537,90 @@ print(model)
     ## Validation Set Metrics: 
     ## =====================
     ## 
-    ## Extract validation frame with `h2o.getFrame("RTMP_sid_95a2_4")`
-    ## MSE: (Extract with `h2o.mse`) 0.1206601
-    ## RMSE: (Extract with `h2o.rmse`) 0.3473617
-    ## Logloss: (Extract with `h2o.logloss`) 0.417847
-    ## Mean Per-Class Error: 0.09517516
+    ## Extract validation frame with `h2o.getFrame("RTMP_sid_acdf_4")`
+    ## MSE: (Extract with `h2o.mse`) 0.09233211
+    ## RMSE: (Extract with `h2o.rmse`) 0.303862
+    ## Logloss: (Extract with `h2o.logloss`) 0.3322786
+    ## Mean Per-Class Error: 0.08546429
     ## Confusion Matrix: Extract with `h2o.confusionMatrix(<model>,valid = TRUE)`)
     ## =========================================================================
     ## Confusion Matrix: Row labels: Actual class; Column labels: Predicted class
-    ##           0    1   2    3   4   5   6    7   8    9  Error           Rate
-    ## 0       967    0   0    1   0   4   6    2   0    0 0.0133 =     13 / 980
-    ## 1         1 1105   9    2   0   0   3    3  12    0 0.0264 =   30 / 1.135
-    ## 2        14    1 935   27   4   1  18   14  18    0 0.0940 =   97 / 1.032
-    ## 3         5    1  16  923   0  32   0   22   9    2 0.0861 =   87 / 1.010
-    ## 4         6    0   5    0 755   3  32    7   7  167 0.2312 =    227 / 982
-    ## 5        19    1   2   38   2 764  10   13  36    7 0.1435 =    128 / 892
-    ## 6        33    3   2    0   1   4 911    1   3    0 0.0491 =     47 / 958
-    ## 7         3    4  21   11   0   1   0  973   0   15 0.0535 =   55 / 1.028
-    ## 8        16    5   9   13   2  64   9   15 835    6 0.1427 =    139 / 974
-    ## 9        11    3   0   11   5  14   3   58   8  896 0.1120 =  113 / 1.009
-    ## Totals 1075 1123 999 1026 769 887 992 1108 928 1093 0.0936 = 936 / 10.000
+    ##          0    1    2   3   4   5   6    7    8   9  Error           Rate
+    ## 0      951    0    0   2   0   4  11    2   10   0 0.0296 =     29 / 980
+    ## 1        0 1102    4   1   0   0   6    1   21   0 0.0291 =   33 / 1.135
+    ## 2        4    2  948  12   6   1  13   10   35   1 0.0814 =   84 / 1.032
+    ## 3        2    0   27 859   1  46   0   18   56   1 0.1495 =  151 / 1.010
+    ## 4        0    0    6   0 904   0  14    3   16  39 0.0794 =     78 / 982
+    ## 5        6    2    3  21   5 699  15    9  126   6 0.2164 =    193 / 892
+    ## 6       12    3    5   0   6   9 916    0    7   0 0.0438 =     42 / 958
+    ## 7        1    5   24   6   6   0   1  956   10  19 0.0700 =   72 / 1.028
+    ## 8        6    3    5   3   4   9  10    8  924   2 0.0513 =     50 / 974
+    ## 9        8    3    2   6  36   6   1   10   33 904 0.1041 =  105 / 1.009
+    ## Totals 990 1120 1024 910 968 774 987 1017 1238 972 0.0837 = 837 / 10.000
     ## 
     ## Hit Ratio Table: Extract with `h2o.hit_ratio_table(<model>,valid = TRUE)`
     ## =======================================================================
     ## Top-10 Hit Ratios: 
     ##     k hit_ratio
-    ## 1   1  0.906400
-    ## 2   2  0.954800
-    ## 3   3  0.973200
-    ## 4   4  0.983000
-    ## 5   5  0.988700
-    ## 6   6  0.992700
-    ## 7   7  0.995800
-    ## 8   8  0.998400
-    ## 9   9  0.999300
+    ## 1   1  0.916300
+    ## 2   2  0.963600
+    ## 3   3  0.980300
+    ## 4   4  0.987200
+    ## 5   5  0.992700
+    ## 6   6  0.995900
+    ## 7   7  0.997700
+    ## 8   8  0.999300
+    ## 9   9  1.000000
     ## 10 10  1.000000
 
 ``` r
-# display all performance metrics
-print(h2o.performance(model))
+print(h2o.performance(model))# training metrics
 ```
 
     ## H2OMultinomialMetrics: deeplearning
     ## ** Reported on training data. **
-    ## ** Metrics reported on temporary training frame with 9872 samples **
+    ## ** Metrics reported on temporary training frame with 9945 samples **
     ## 
     ## Training Set Metrics: 
     ## =====================
     ## 
-    ## MSE: (Extract with `h2o.mse`) 0.1195367
-    ## RMSE: (Extract with `h2o.rmse`) 0.3457408
-    ## Logloss: (Extract with `h2o.logloss`) 0.3997046
-    ## Mean Per-Class Error: 0.09123177
+    ## MSE: (Extract with `h2o.mse`) 0.09234385
+    ## RMSE: (Extract with `h2o.rmse`) 0.3038813
+    ## Logloss: (Extract with `h2o.logloss`) 0.3205148
+    ## Mean Per-Class Error: 0.08835063
     ## Confusion Matrix: Extract with `h2o.confusionMatrix(<model>,train = TRUE)`)
     ## =========================================================================
     ## Confusion Matrix: Row labels: Actual class; Column labels: Predicted class
-    ##           0    1   2    3   4   5    6    7   8    9  Error          Rate
-    ## 0       934    0   0    2   0   3   10    3   1    1 0.0210 =    20 / 954
-    ## 1         0 1035   9    2   1   6    0    8  11    1 0.0354 =  38 / 1.073
-    ## 2         9    2 926   22   2   3   26   11  10    2 0.0859 =  87 / 1.013
-    ## 3         5    2  13  948   0  23    4   10   9    5 0.0697 =  71 / 1.019
-    ## 4         2    2   0    2 728   4   46   14  11  154 0.2440 =   235 / 963
-    ## 5        16    1   8   33   1 803    9    4  29   11 0.1224 =   112 / 915
-    ## 6        16    2  12    0   2   8  951    2  11    0 0.0528 =  53 / 1.004
-    ## 7         3    3   7    6   0   2    1  969   1   15 0.0377 =  38 / 1.007
-    ## 8        20   13   8    8   1  44    3    7 862    6 0.1132 =   110 / 972
-    ## 9         8    2   0   10  10  14    2   73   5  828 0.1303 =   124 / 952
-    ## Totals 1013 1062 983 1033 745 910 1052 1101 950 1023 0.0900 = 888 / 9.872
+    ##          0    1   2   3   4   5    6    7    8    9  Error          Rate
+    ## 0      955    0   2   1   2   7   15    0   13    0 0.0402 =    40 / 995
+    ## 1        0 1031   3   1   0   2    2    4   17    2 0.0292 =  31 / 1.062
+    ## 2        2    1 904  17   6   1   10    8   26    1 0.0738 =    72 / 976
+    ## 3        3    1  29 832   0  60    2   15   51    6 0.1672 =   167 / 999
+    ## 4        1    2   7   0 873   3   16    1   12   54 0.0991 =    96 / 969
+    ## 5        9    0   9  11   7 703   16    1  148    5 0.2266 =   206 / 909
+    ## 6        6    3   5   0   3   8  975    0   10    0 0.0347 =  35 / 1.010
+    ## 7        2    2  14   2  12   0    3  984    4   23 0.0593 =  62 / 1.046
+    ## 8        1    7   9   4   0  12    8    2  905    4 0.0494 =    47 / 952
+    ## 9        3    3   1   2  28   3    0   33   34  920 0.1042 = 107 / 1.027
+    ## Totals 982 1050 983 870 931 799 1047 1048 1220 1015 0.0868 = 863 / 9.945
     ## 
     ## Hit Ratio Table: Extract with `h2o.hit_ratio_table(<model>,train = TRUE)`
     ## =======================================================================
     ## Top-10 Hit Ratios: 
     ##     k hit_ratio
-    ## 1   1  0.910049
-    ## 2   2  0.956442
-    ## 3   3  0.974777
-    ## 4   4  0.984400
-    ## 5   5  0.988250
-    ## 6   6  0.993112
-    ## 7   7  0.995746
-    ## 8   8  0.997670
-    ## 9   9  0.999696
+    ## 1   1  0.913223
+    ## 2   2  0.967220
+    ## 3   3  0.982504
+    ## 4   4  0.989442
+    ## 5   5  0.993464
+    ## 6   6  0.995877
+    ## 7   7  0.997788
+    ## 8   8  0.999497
+    ## 9   9  0.999799
     ## 10 10  1.000000
 
 ``` r
-# training metrics
-print(h2o.performance(model, valid = TRUE))
+print(h2o.performance(model, valid = TRUE))# validation metrics 
 ```
 
     ## H2OMultinomialMetrics: deeplearning
@@ -629,52 +630,240 @@ print(h2o.performance(model, valid = TRUE))
     ## Validation Set Metrics: 
     ## =====================
     ## 
-    ## Extract validation frame with `h2o.getFrame("RTMP_sid_95a2_4")`
-    ## MSE: (Extract with `h2o.mse`) 0.1206601
-    ## RMSE: (Extract with `h2o.rmse`) 0.3473617
-    ## Logloss: (Extract with `h2o.logloss`) 0.417847
-    ## Mean Per-Class Error: 0.09517516
+    ## Extract validation frame with `h2o.getFrame("RTMP_sid_acdf_4")`
+    ## MSE: (Extract with `h2o.mse`) 0.09233211
+    ## RMSE: (Extract with `h2o.rmse`) 0.303862
+    ## Logloss: (Extract with `h2o.logloss`) 0.3322786
+    ## Mean Per-Class Error: 0.08546429
     ## Confusion Matrix: Extract with `h2o.confusionMatrix(<model>,valid = TRUE)`)
     ## =========================================================================
     ## Confusion Matrix: Row labels: Actual class; Column labels: Predicted class
-    ##           0    1   2    3   4   5   6    7   8    9  Error           Rate
-    ## 0       967    0   0    1   0   4   6    2   0    0 0.0133 =     13 / 980
-    ## 1         1 1105   9    2   0   0   3    3  12    0 0.0264 =   30 / 1.135
-    ## 2        14    1 935   27   4   1  18   14  18    0 0.0940 =   97 / 1.032
-    ## 3         5    1  16  923   0  32   0   22   9    2 0.0861 =   87 / 1.010
-    ## 4         6    0   5    0 755   3  32    7   7  167 0.2312 =    227 / 982
-    ## 5        19    1   2   38   2 764  10   13  36    7 0.1435 =    128 / 892
-    ## 6        33    3   2    0   1   4 911    1   3    0 0.0491 =     47 / 958
-    ## 7         3    4  21   11   0   1   0  973   0   15 0.0535 =   55 / 1.028
-    ## 8        16    5   9   13   2  64   9   15 835    6 0.1427 =    139 / 974
-    ## 9        11    3   0   11   5  14   3   58   8  896 0.1120 =  113 / 1.009
-    ## Totals 1075 1123 999 1026 769 887 992 1108 928 1093 0.0936 = 936 / 10.000
+    ##          0    1    2   3   4   5   6    7    8   9  Error           Rate
+    ## 0      951    0    0   2   0   4  11    2   10   0 0.0296 =     29 / 980
+    ## 1        0 1102    4   1   0   0   6    1   21   0 0.0291 =   33 / 1.135
+    ## 2        4    2  948  12   6   1  13   10   35   1 0.0814 =   84 / 1.032
+    ## 3        2    0   27 859   1  46   0   18   56   1 0.1495 =  151 / 1.010
+    ## 4        0    0    6   0 904   0  14    3   16  39 0.0794 =     78 / 982
+    ## 5        6    2    3  21   5 699  15    9  126   6 0.2164 =    193 / 892
+    ## 6       12    3    5   0   6   9 916    0    7   0 0.0438 =     42 / 958
+    ## 7        1    5   24   6   6   0   1  956   10  19 0.0700 =   72 / 1.028
+    ## 8        6    3    5   3   4   9  10    8  924   2 0.0513 =     50 / 974
+    ## 9        8    3    2   6  36   6   1   10   33 904 0.1041 =  105 / 1.009
+    ## Totals 990 1120 1024 910 968 774 987 1017 1238 972 0.0837 = 837 / 10.000
     ## 
     ## Hit Ratio Table: Extract with `h2o.hit_ratio_table(<model>,valid = TRUE)`
     ## =======================================================================
     ## Top-10 Hit Ratios: 
     ##     k hit_ratio
-    ## 1   1  0.906400
-    ## 2   2  0.954800
-    ## 3   3  0.973200
-    ## 4   4  0.983000
-    ## 5   5  0.988700
-    ## 6   6  0.992700
-    ## 7   7  0.995800
-    ## 8   8  0.998400
-    ## 9   9  0.999300
+    ## 1   1  0.916300
+    ## 2   2  0.963600
+    ## 3   3  0.980300
+    ## 4   4  0.987200
+    ## 5   5  0.992700
+    ## 6   6  0.995900
+    ## 7   7  0.997700
+    ## 8   8  0.999300
+    ## 9   9  1.000000
     ## 10 10  1.000000
 
 ``` r
-# validation metrics 
 # Get MSE only
 print(h2o.mse(model, valid = TRUE))
 ```
 
-    ## [1] 0.1206601
+    ## [1] 0.09233211
 
 ``` r
-# Cross-validated MSE
-
+#Cross-validated MSE
 #h2o.mse(model_cv, xval = TRUE) #FALTA
 ```
+
+## Validación cruzada
+
+O N-fold Cross-Validation. Para guardar predicciones de la VC fijar el
+parámetro `keepcrossvalidationpredictions` como `TRUE`. También se puede
+especificar las filas por medio de `foldcolumn`. Por defecto,
+`foldcolumn` es aleatorio.
+
+``` r
+#Perform 5-fold cross-validation on training_frame
+model_cv <- h2o.deeplearning(
+    x = x,
+    y = y,
+    training_frame = train,
+    distribution = "multinomial",
+    activation = "RectifierWithDropout",
+    hidden = c(32,32,32),
+    input_dropout_ratio = 0.2,
+    sparse = TRUE,
+    l1 = 1e-5,
+    epochs = 10,
+    nfolds = 5)
+```
+
+    ## Warning in .h2o.startModelJob(algo, params, h2oRestApiVersion): Dropping bad and constant columns: [C86, C85, C729, C728, C646, C645, C169, C760, C561, C53, C11, C55, C10, C54, C57, C12, C56, C58, C17, C19, C18, C731, C730, C20, C22, C21, C24, C23, C26, C25, C28, C27, C702, C701, C29, C700, C1, C2, C784, C3, C783, C4, C782, C5, C781, C6, C142, C7, C141, C8, C9, C31, C30, C32, C759, C758, C757, C756, C755, C477, C113, C674, C112, C673, C672, C84, C83].
+
+    ## 
+      |                                                                       
+      |                                                                 |   0%
+      |                                                                       
+      |==                                                               |   3%
+      |                                                                       
+      |===                                                              |   4%
+      |                                                                       
+      |====                                                             |   7%
+      |                                                                       
+      |======                                                           |   9%
+      |                                                                       
+      |========                                                         |  12%
+      |                                                                       
+      |==========                                                       |  15%
+      |                                                                       
+      |===========                                                      |  17%
+      |                                                                       
+      |============                                                     |  19%
+      |                                                                       
+      |===============                                                  |  23%
+      |                                                                       
+      |================                                                 |  24%
+      |                                                                       
+      |=================                                                |  27%
+      |                                                                       
+      |====================                                             |  31%
+      |                                                                       
+      |======================                                           |  33%
+      |                                                                       
+      |=======================                                          |  35%
+      |                                                                       
+      |=======================                                          |  36%
+      |                                                                       
+      |=========================                                        |  39%
+      |                                                                       
+      |===========================                                      |  41%
+      |                                                                       
+      |=============================                                    |  44%
+      |                                                                       
+      |===============================                                  |  48%
+      |                                                                       
+      |================================                                 |  49%
+      |                                                                       
+      |==================================                               |  52%
+      |                                                                       
+      |===================================                              |  53%
+      |                                                                       
+      |===================================                              |  55%
+      |                                                                       
+      |=====================================                            |  57%
+      |                                                                       
+      |=======================================                          |  60%
+      |                                                                       
+      |========================================                         |  61%
+      |                                                                       
+      |==========================================                       |  64%
+      |                                                                       
+      |===========================================                      |  67%
+      |                                                                       
+      |=============================================                    |  69%
+      |                                                                       
+      |===============================================                  |  72%
+      |                                                                       
+      |=================================================                |  75%
+      |                                                                       
+      |===================================================              |  79%
+      |                                                                       
+      |=====================================================            |  81%
+      |                                                                       
+      |=======================================================          |  85%
+      |                                                                       
+      |========================================================         |  87%
+      |                                                                       
+      |==========================================================       |  89%
+      |                                                                       
+      |============================================================     |  92%
+      |                                                                       
+      |==============================================================   |  95%
+      |                                                                       
+      |================================================================ |  98%
+      |                                                                       
+      |=================================================================| 100%
+
+### Métricas del CV
+
+``` r
+#Cross-validated MSE
+h2o.mse(model_cv, xval = TRUE)
+```
+
+    ## [1] 0.1288316
+
+El valor del error de entrenamiento está basado en el parámetro
+`score_training_samples`, el cual especifica el numero aleatorio de
+puntos de ejemplos de entrenamiento usado para el *scoring* (el valor
+por defecto es 10.000 puntos). El error de validacion esta basado sobre
+el parámetro `score_validation_samples`, el cual configura el mismo
+valor sobre el conjunto de validación (por defecto, este es el conjunto
+de validación por completo).
+
+> [Scoring](https://s3.amazonaws.com/h2o-release/h2o/rel-markov/1/docs-website/datascience/deeplearning.html):
+> If a validation set was given, the scoring results are displayed for
+> the validation set (or a sample thereof). Otherwise, scoring is
+> performed on the training dataset (or a sample thereof).
+
+    If a validation set was given, the scoring results are displayed for the validation set (or a sample thereof). Otherwise, scoring is performed on the training dataset (or a sample thereof).
+
+En general, eligiendo un número grande de puntos de ejemplos lleva a un
+mejor entendimiento del rendimiento del modelo sobre el tu conjunto de
+datos; fijando cualquiera de estos parámetros en 0 automáticamente usas
+el conjunto entero para el *scoring*.  
+Sin embargo, cualquiera de los metodos de permite controlar el minimo o
+maximo de tiempo gastado sobre el *scoring* con los parámetros
+`score_interval` y `score_duty_cycle`.  
+Si el parámetro `overwrite_with_best_model` está activado, estos
+parámetros *scoring* afectan al modelo final. Esta opción selecciona el
+modelo con más bajo error de validación durante el entrenamiento (basado
+sobre los puntos de ejemplos usados para *scoring*) como el modelo final
+después de entrenamiento. Si un conjunto de datos no está identificado
+como conjunto de validación, el conjunto de entrenamiento es usado por
+defecto, en este caso, ambos `score_training_samples` o
+`score_validation_samples` controlarán el calculo del error durante el
+entrenamiento y consecuentemente, el modelo seleccionado como el mejor.
+
+## Estimaciones
+
+Una vez tengamos un modelo satisfactorio (determinado por validación o
+métricas de CV), se usa el comando `h2o.predict()` para calcular y
+almacenar las predicciones sobre un conjunto nuevo de datos.
+
+``` r
+#lassify the test set (predict class labels)
+# This also returns the probability for each class
+pred <- h2o.predict(model, newdata = test)
+```
+
+    ## 
+      |                                                                       
+      |                                                                 |   0%
+      |                                                                       
+      |=================================================================| 100%
+
+``` r
+# Take a look at the predictions
+head(pred)
+```
+
+    ##   predict           p0           p1           p2           p3           p4
+    ## 1       8 5.916685e-03 1.189548e-02 1.315505e-02 1.623983e-02 6.250161e-03
+    ## 2       3 4.724986e-04 9.306182e-04 9.030625e-03 9.518293e-01 7.186520e-05
+    ## 3       8 2.041287e-01 3.236425e-03 4.550537e-02 4.013814e-02 5.087026e-02
+    ## 4       0 9.132045e-01 6.722962e-05 3.267654e-03 1.680776e-03 7.630278e-03
+    ## 5       1 5.371797e-09 9.996462e-01 4.997328e-07 5.426316e-06 1.143495e-07
+    ## 6       5 2.736239e-02 5.896637e-03 4.984269e-03 1.645135e-02 1.031600e-02
+    ##             p5           p6           p7           p8           p9
+    ## 1 4.469240e-02 5.885408e-03 0.0021584181 8.796304e-01 1.417618e-02
+    ## 2 2.485858e-02 1.233588e-05 0.0088886579 2.466814e-03 1.438715e-03
+    ## 3 1.661355e-01 5.660876e-02 0.0039118917 4.160848e-01 1.338015e-02
+    ## 4 2.183547e-02 4.230792e-02 0.0003171629 8.681366e-03 1.007649e-03
+    ## 5 7.025357e-07 4.593299e-06 0.0003199082 1.560834e-05 6.958569e-06
+    ## 6 6.173669e-01 2.107164e-02 0.0005970165 2.897057e-01 6.248144e-03
+
+## Variables de importancia
